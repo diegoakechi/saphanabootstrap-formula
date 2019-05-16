@@ -32,20 +32,11 @@ Requires:       salt-shaptools
 Requires:       habootstrap-formula
 
 %define fname hana
-%define fdir  %{_datadir}/susemanager/formulas
+%define fdir  %{_datadir}/salt-formulas
 %define ftemplates templates
 
 %description
 SAP HANA deployment salt formula
-
-# package to deploy on SUMA specific path.
-%package suma
-Summary:        SAP HANA platform deployment formula (SUMA specific)
-Requires:       salt-shaptools
-Requires:       habootstrap-formula-suma
-
-%description suma
-SAP HANA deployment salt formula (SUMA specific)
 
 %prep
 %setup -q
@@ -54,11 +45,7 @@ SAP HANA deployment salt formula (SUMA specific)
 
 %install
 pwd
-mkdir -p %{buildroot}/srv/salt/
-cp -R %{fname} %{buildroot}/srv/salt/
-cp -R %{ftemplates} %{buildroot}/srv/salt/%{fname}/
 
-# SUMA Specific
 mkdir -p %{buildroot}%{fdir}/states/%{fname}
 mkdir -p %{buildroot}%{fdir}/metadata/%{fname}
 cp -R %{fname} %{buildroot}%{fdir}/states
@@ -69,8 +56,7 @@ then
   cp -R metadata.yml %{buildroot}%{fdir}/metadata/%{fname}
 fi
 
-
-%files
+%files 
 %defattr(-,root,root,-)
 # %license macro is not available on older releases
 %if 0%{?sle_version} <= 120300
@@ -79,21 +65,6 @@ fi
 %license LICENSE
 %endif
 %doc README.md
-/srv/salt/%{fname}
-/srv/salt/%{fname}/%{ftemplates}
-
-%dir %attr(0755, root, salt) /srv/salt
-
-%files suma
-%defattr(-,root,root,-)
-# %license macro is not available on older releases
-%if 0%{?sle_version} <= 120300
-%doc LICENSE
-%else
-%license LICENSE
-%endif
-%doc README.md
-%dir %{_datadir}/susemanager
 %dir %{fdir}
 %dir %{fdir}/states
 %dir %{fdir}/metadata
@@ -101,7 +72,6 @@ fi
 %{fdir}/states/%{fname}/%{ftemplates}
 %{fdir}/metadata/%{fname}
 
-%dir %attr(0755, root, salt) %{_datadir}/susemanager
 %dir %attr(0755, root, salt) %{fdir}
 %dir %attr(0755, root, salt) %{fdir}/states
 %dir %attr(0755, root, salt) %{fdir}/metadata
